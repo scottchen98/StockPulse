@@ -21,6 +21,10 @@ export default function HomePage() {
           property="og:description"
           content="Elevate your investment game with the sleek, real-time stock insights tool."
         />
+        <meta
+          property="og:image"
+          content="https://s-pulse.vercel.app/meta.jpg"
+        />
       </Head>
       <Dashboard />
     </>

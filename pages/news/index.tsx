@@ -21,6 +21,10 @@ export default function NewsPage() {
           property="og:description"
           content="Get all the latest news in the market on StockPulse."
         />
+        <meta
+          property="og:image"
+          content="https://s-pulse.vercel.app/meta.jpg"
+        />
       </Head>
       <News />
     </>
