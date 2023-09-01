@@ -10,11 +10,17 @@ import {
 } from "recharts";
 import { useTheme } from "next-themes";
 
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { Badge } from "./ui/badge";
 import { StockTimeSeries } from "@/Interface/IStockData";
 import { StockQuote } from "@/Interface/IStockQuote";
 import { useLiveStockPrice } from "@/hooks/stock/useLiveStockPrice";
+import {
+  RangeUnit,
+  calculateLivePriceChange,
+  calculatePriceChange,
+  formatRange,
+} from "@/helpers/stock";
 
 type CustomTooltipProps = React.ComponentProps<typeof Tooltip>;
 
@@ -59,6 +65,7 @@ export default memo(function AreaChart({
   stockData,
   stockMeta,
   prevSymbol,
+  rangeUnit,
 }: {
   stockData: StockTimeSeries[];
   stockMeta: Pick<
@@ -66,6 +73,7 @@ export default memo(function AreaChart({
     "symbol" | "name" | "exchange" | "currency" | "is_market_open"
   >;
   prevSymbol: string;
+  rangeUnit: RangeUnit;
 }) {
   const { resolvedTheme } = useTheme();
   const {
@@ -82,35 +90,56 @@ export default memo(function AreaChart({
     isMarketOpen
   );
 
+  const memoLivePriceChange = useCallback(calculateLivePriceChange, [
+    stockData,
+    livePrice,
+  ]);
+  const memoPriceChange = useCallback(calculatePriceChange, [stockData]);
+  const memoRangeUnit = useCallback(formatRange, [rangeUnit]);
+
+  const { priceChange, changePercent } =
+    isMarketOpen && livePrice
+      ? memoLivePriceChange(stockData[0], livePrice)
+      : memoPriceChange(stockData);
+
   return (
     <Card className="mx-auto h-fit max-w-5xl shadow-2xl dark:shadow-[0_25px_50px_-12px_rgba(250,250,250,0.25);]">
       <CardHeader className="mx-auto">
         <div className="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-end sm:space-y-0">
           <h1 className="ml-[60px] flex flex-col text-4xl font-extrabold text-[#8884d8] sm:block">
-            {symbol}{" "}
-            <span className="text-sm font-semibold tracking-wide text-[#374151] dark:text-[#e5e7eb] sm:ml-2">
+            <p>{symbol}</p>{" "}
+            <p className="text-sm font-semibold tracking-wide text-[#374151] dark:text-[#e5e7eb]">
               {`${name} - ${exchange}`}
-            </span>
+            </p>
           </h1>
-          <div className="item-start flex flex-col space-y-1 sm:items-end">
-            <div className="relative ml-[60px] flex sm:mr-[30px]">
-              <div
-                className={`absolute inline-flex h-full w-full ${
-                  isMarketOpen ? "animate-ping" : ""
-                } rounded-full ${
-                  isMarketOpen ? "bg-purple-400" : "bg-slate-400"
-                } opacity-75`}
-              ></div>
-              <Badge
-                className={`relative inline-flex h-fit w-fit ${
-                  isMarketOpen
-                    ? "bg-purple-500 hover:bg-purple-500"
-                    : "bg-slate-500 hover:bg-slate-500"
-                }  text-[10px] leading-3 hover:bg-slate-500 dark:text-[#e5e7eb]`}
+          <div
+            className="order-last ml-[60px] sm:order-none sm:ml-0 sm:mr-auto"
+            style={{
+              marginTop: 0,
+            }}
+          >
+            <p className={`text-sm sm:ml-3`}>
+              <span
+                className={`${
+                  +priceChange > 0 ? "text-green-500" : "text-red-500"
+                }`}
               >
-                {isMarketOpen ? "Market Open" : "Market Closed"}
-              </Badge>
-            </div>
+                {priceChange}({changePercent})
+              </span>{" "}
+              {memoRangeUnit(rangeUnit)}
+            </p>
+          </div>
+
+          <div className="item-start flex flex-col space-y-1 sm:items-end">
+            <Badge
+              className={`ml-[60px] h-fit w-fit sm:mr-[30px] ${
+                isMarketOpen
+                  ? "bg-purple-500 hover:bg-purple-500"
+                  : "bg-slate-500 hover:bg-slate-500"
+              }  text-[10px] leading-3 dark:text-[#e5e7eb]`}
+            >
+              {isMarketOpen ? "Market Open" : "Market Closed"}
+            </Badge>
 
             <p className="ml-[60px] text-2xl font-bold text-[#8884d8] sm:ml-0 sm:mr-[30px]">
               {/* if market is closed then show last closing price */}

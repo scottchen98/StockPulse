@@ -4,7 +4,7 @@ import AreaChart from "./AreaChart";
 import Alert from "./Alert";
 import Loading from "./Loading";
 
-import { formatListOfStockTimes } from "@/helpers/stock";
+import { RangeUnit, formatListOfStockTimes } from "@/helpers/stock";
 import { useSearchStock } from "@/hooks/stock/useSearchStock";
 import { useStockQuote } from "@/hooks/stock/useStockQuote";
 
@@ -84,6 +84,7 @@ export default function Dashboard() {
           stockData={memoStockData(stockData as StockData, rangeUnit).values}
           stockMeta={memoStockMeta}
           prevSymbol={prevSymbol}
+          rangeUnit={rangeUnit as RangeUnit}
         />
       )}
     </div>

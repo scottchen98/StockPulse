@@ -49,4 +49,58 @@ const formatListOfStockTimes = (stocks: StockData, rangeUnit: string) => {
   return { ...stocks, values: formattedTimes };
 };
 
-export { formatListOfStockTimes };
+const calculatePriceChange = (stock: StockTimeSeries[]) => {
+  const firstValue = stock[0].close;
+  const lastValue = stock[stock.length - 1].close;
+  const change = +lastValue - +firstValue;
+  const changePercent = (change / +firstValue) * 100;
+  return {
+    priceChange: change > 0 ? `+${change.toFixed(2)}` : change.toFixed(2),
+    changePercent:
+      changePercent > 0
+        ? `+${changePercent.toFixed(2)}%`
+        : `${changePercent.toFixed(2)}%`,
+  };
+};
+
+const calculateLivePriceChange = (
+  stock: StockTimeSeries,
+  livePrice: number
+) => {
+  const value = +stock.close;
+  const change = livePrice - value;
+  const changePercent = (change / value) * 100;
+  return {
+    priceChange: change > 0 ? `+${change.toFixed(2)}` : change.toFixed(2),
+    changePercent:
+      changePercent > 0
+        ? `+${changePercent.toFixed(2)}%`
+        : `${changePercent.toFixed(2)}%`,
+  };
+};
+
+export type RangeUnit =
+  | "1day"
+  | "5days"
+  | "1month"
+  | "3months"
+  | "6months"
+  | "year";
+const formatRange = (rangeUnit: RangeUnit) => {
+  const rangeOptions = {
+    "1day": "Today",
+    "5days": "Last 1W",
+    "1month": "Last 1M",
+    "3months": "Last 3M",
+    "6months": "Last 6M",
+    year: "YTD",
+  };
+  return rangeOptions[rangeUnit];
+};
+
+export {
+  formatListOfStockTimes,
+  calculatePriceChange,
+  calculateLivePriceChange,
+  formatRange,
+};
