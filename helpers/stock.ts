@@ -2,7 +2,11 @@ import { formatStockTime } from "./time";
 
 import { StockData, StockTimeSeries } from "@/Interface/IStockData";
 
-const formatListOfStockTimes = (stocks: StockData, rangeUnit: string) => {
+const formatListOfStockTimes = (
+  stocks: StockData,
+  rangeUnit: string,
+  interval: string
+) => {
   const values = stocks.values;
 
   let formattedTimes: StockTimeSeries[] = [];
@@ -18,13 +22,24 @@ const formatListOfStockTimes = (stocks: StockData, rangeUnit: string) => {
     });
   } else if (rangeUnit === "5days") {
     formattedTimes = values.map((value) => {
-      const formattedTime = formatStockTime(value.datetime, rangeUnit);
+      // special case when range is 5 days and interval is 1 day (only date is provided in datetime property)
+      const formattedTime = formatStockTime(
+        interval === "1day" ? `${value.datetime} 15:59:00` : value.datetime,
+        rangeUnit
+      );
       if (!formattedTime) return value;
       const [date, time] = formattedTime.split("-");
-      return {
-        ...value,
-        datetime: time.includes("9:30am") ? date : time,
-      };
+      if (interval === "1day") {
+        return {
+          ...value,
+          datetime: date,
+        };
+      } else {
+        return {
+          ...value,
+          datetime: time.includes("9:30am") ? date : time,
+        };
+      }
     });
   } else if (rangeUnit.includes("month") || rangeUnit === "year") {
     formattedTimes = values.map((value, index) => {

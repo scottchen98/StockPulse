@@ -81,7 +81,9 @@ export default function Dashboard() {
         />
       ) : (
         <AreaChart
-          stockData={memoStockData(stockData as StockData, rangeUnit).values}
+          stockData={
+            memoStockData(stockData as StockData, rangeUnit, interval).values
+          }
           stockMeta={memoStockMeta}
           prevSymbol={prevSymbol}
           rangeUnit={rangeUnit as RangeUnit}
