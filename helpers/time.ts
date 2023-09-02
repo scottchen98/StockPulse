@@ -4,6 +4,7 @@ import {
   subYears,
   format,
   subBusinessDays,
+  isWeekend,
 } from "date-fns";
 
 function formatDistanceDay(date: Date): string {
@@ -28,8 +29,9 @@ function getTodayDate() {
   return formattedToday;
 }
 
-function getDaysAgo(daysAgo: number) {
-  const day = subBusinessDays(new Date(), daysAgo);
+function getBusinessDaysAgo(daysAgo: number) {
+  const today = new Date();
+  const day = subBusinessDays(today, isWeekend(today) ? daysAgo : daysAgo - 1);
   const formattedDay = format(day, "yyyy-MM-dd");
   return formattedDay;
 }
@@ -66,7 +68,7 @@ function formatStockTime(date: string, rangeUnit: string) {
 export {
   formatDistanceDay,
   getTodayDate,
-  getDaysAgo,
+  getBusinessDaysAgo,
   getMonthsAgo,
   getStartOfYear,
   getYearsAgo,

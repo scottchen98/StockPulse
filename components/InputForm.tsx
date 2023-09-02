@@ -23,7 +23,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import FormSelectItems from "@/components/FormSelectItems";
 
 import {
-  getDaysAgo,
+  getBusinessDaysAgo,
   getMonthsAgo,
   getStartOfYear,
   getTodayDate,
@@ -35,7 +35,7 @@ import {
 
 const rangeOptions = [
   { value: `${getTodayDate()} 09:30:00&1day`, label: "1 day" },
-  { value: `${getDaysAgo(4)} 09:30:00&5days`, label: "5 days" },
+  { value: `${getBusinessDaysAgo(5)} 09:30:00&5days`, label: "5 days" },
   { value: `${getMonthsAgo(1)} 09:30:00&1month`, label: "1 month" },
   { value: `${getMonthsAgo(3)} 09:30:00&3months`, label: "3 months" },
   { value: `${getMonthsAgo(6)} 09:30:00&6months`, label: "6 months" },
