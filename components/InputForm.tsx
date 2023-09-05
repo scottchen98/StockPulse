@@ -34,7 +34,7 @@ import {
 } from "@/helpers/searchField";
 
 const rangeOptions = [
-  { value: `${getTodayDate()} 09:30:00&1day`, label: "1 day" },
+  { value: `${getBusinessDaysAgo(1)} 09:30:00&1day`, label: "1 day" },
   { value: `${getBusinessDaysAgo(5)} 09:30:00&5days`, label: "5 days" },
   { value: `${getMonthsAgo(1)} 09:30:00&1month`, label: "1 month" },
   { value: `${getMonthsAgo(3)} 09:30:00&3months`, label: "3 months" },

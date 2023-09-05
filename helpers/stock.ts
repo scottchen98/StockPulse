@@ -94,6 +94,7 @@ const calculateLivePriceChange = (
   };
 };
 
+import { isWeekend, format, previousFriday } from "date-fns";
 export type RangeUnit =
   | "1day"
   | "5days"
@@ -102,8 +103,11 @@ export type RangeUnit =
   | "6months"
   | "year";
 const formatRange = (rangeUnit: RangeUnit) => {
+  const today = new Date();
   const rangeOptions = {
-    "1day": "Today",
+    "1day": isWeekend(today)
+      ? format(previousFriday(today), "LLL dd, yyyy")
+      : "Today",
     "5days": "Last 1W",
     "1month": "Last 1M",
     "3months": "Last 3M",
