@@ -2,7 +2,7 @@
   <img width="850" alt="StockPulse" src="https://github.com/scottchen98/StockPulse/assets/103295581/afd3cfb5-103e-445e-94f1-eb5f6ea763ca">
 </p>
 
-# Project Overview
+# 📈 $tockPulse
 
 StockPulse is a dynamic real-time stock insights platform coupled with a curated news page showcasing the top 100 market news. It's designed to provide users with comprehensive market data and insights.
 
