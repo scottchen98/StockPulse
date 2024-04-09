@@ -66,7 +66,7 @@ export default function NewsCard({
         </CardDescription>
         <Image
           className="h-40 rounded-xl object-cover"
-          src={image}
+          src={image ? image : "/images/default-cover-image.png"}
           width={302}
           height={200}
           alt={`${headline} image`}
